@@ -1,0 +1,44 @@
+stateDiagram-v2
+    [*] --> ClosedIdle
+
+    state "AUTONOMOUS MODE" as Auto {
+        ClosedIdle : Gate closed<br/>Waiting for a vehicle
+        Opening : Servo sweeping 0 to 90 deg
+        OpenHold : Gate open<br/>Hold timer running
+        Closing : Servo sweeping 90 to 0 deg<br/>Ultrasonic actively watching
+
+        ClosedIdle --> Opening : PIR detects motion<br/>(hardware interrupt)
+        Opening --> OpenHold : servo reaches 90 deg
+        OpenHold --> Closing : hold time elapsed<br/>AND distance > 20 cm
+        Closing --> ClosedIdle : servo reaches 0 deg<br/>trip counter reset to 0
+    }
+
+    state "SAFETY MODE" as Safety {
+        Retreating : Gate reopening<br/>Buzzer chirping
+        IdleHold : Held open ~12 s<br/>Time to clear blockage
+        Latched : Gate frozen<br/>Buzzer chirping<br/>Awaiting a human
+
+        Retreating --> IdleHold : servo reaches 90 deg
+    }
+
+    state "MANUAL MODE" as Manual {
+        ManualControl : Auto cycle off<br/>Potentiometer sets gate position<br/>Safety halt STILL ACTIVE
+    }
+
+    Closing --> Retreating : obstruction < 20 cm<br/>AND trips so far <= 2<br/>(trip counter +1)
+    Closing --> Latched : obstruction < 20 cm<br/>AND this is trip 3<br/>(trip counter +1)
+
+    ManualControl --> Retreating : obstruction < 20 cm<br/>while closing under manual<br/>AND trips so far <= 2
+    ManualControl --> Latched : obstruction < 20 cm<br/>while closing under manual<br/>AND this is trip 3
+
+    IdleHold --> OpenHold : idle window elapsed<br/>resume automation
+    Latched --> Opening : RESET button pressed<br/>or serial 'r'<br/>trip counter reset to 0
+
+    Auto --> ManualControl : serial command 'm'
+    ManualControl --> ClosedIdle : serial 'a'<br/>AND gate fully closed
+    ManualControl --> OpenHold : serial 'a'<br/>AND gate part-open<br/>(fresh hold timer)
+
+    note right of Safety
+        Serial 'a' / 'm' refused
+        while in Safety mode
+    end note

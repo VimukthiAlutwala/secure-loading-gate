@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "author": "Vimukthi",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-pir-motion-sensor", "id": "pir", "top": -230, "left": 180, "attrs": {} },
+    { "type": "wokwi-hc-sr04", "id": "ultra", "top": -230, "left": 380, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot", "top": 60, "left": 320, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo", "top": 250, "left": 180, "attrs": {} },
+    { "type": "wokwi-buzzer", "id": "buzz", "top": 250, "left": 400, "attrs": { "volume": "0.1" } },
+    { "type": "wokwi-pushbutton", "id": "btn", "top": 120, "left": -180, "attrs": { "color": "red", "label": "RESET" } },
+    { "type": "board-ssd1306", "id": "oled", "top": -180, "left": -220, "attrs": {} }
+  ],
+  "connections": [
+    [ "pir:VCC", "esp:5V", "red", [] ],
+    [ "pir:GND", "esp:GND.1", "black", [] ],
+    [ "pir:OUT", "esp:14", "green", [] ],
+
+    [ "ultra:VCC", "esp:5V", "red", [] ],
+    [ "ultra:GND", "esp:GND.1", "black", [] ],
+    [ "ultra:TRIG", "esp:5", "blue", [] ],
+    [ "ultra:ECHO", "esp:18", "purple", [] ],
+
+    [ "pot:VCC", "esp:3V3", "red", [] ],
+    [ "pot:GND", "esp:GND.2", "black", [] ],
+    [ "pot:SIG", "esp:34", "orange", [] ],
+
+    [ "servo:V+", "esp:5V", "red", [] ],
+    [ "servo:GND", "esp:GND.2", "black", [] ],
+    [ "servo:PWM", "esp:13", "green", [] ],
+
+    [ "buzz:1", "esp:12", "green", [] ],
+    [ "buzz:2", "esp:GND.3", "black", [] ],
+
+    [ "btn:1.l", "esp:4", "green", [] ],
+    [ "btn:2.l", "esp:GND.3", "black", [] ],
+
+    [ "oled:VCC", "esp:3V3", "red", [] ],
+    [ "oled:GND", "esp:GND.3", "black", [] ],
+    [ "oled:SDA", "esp:21", "cyan", [] ],
+    [ "oled:SCL", "esp:22", "yellow", [] ]
+  ],
+  "dependencies": {}
+}
