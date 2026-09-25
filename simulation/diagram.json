@@ -13,6 +13,8 @@
     { "type": "board-ssd1306", "id": "oled", "top": -180, "left": -220, "attrs": {} }
   ],
   "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "" ], 
+    [ "esp:RX", "$serialMonitor:TX", "" ], 
     [ "pir:VCC", "esp:5V", "red", [] ],
     [ "pir:GND", "esp:GND.1", "black", [] ],
     [ "pir:OUT", "esp:14", "green", [] ],
